@@ -27,9 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-aeu**!dm!s765s^jhuk&(^*t^e7eqi1z_jvs_$wclq-ez-)(%y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if getenv('DEBUG') == 'True' else False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = getenv('ALLOWED_HOSTS').split(',') if getenv('ALLOWED_HOSTS') else []
 
 
 # Application definition
@@ -92,7 +92,7 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': BASE_DIR / 'db.sqlite3',
 
-        'ENGINE' : 'django.db.backends.mysql',
+        'ENGINE' : 'django.db.backends.postgresql',
         'NAME' : getenv('DB_NAME'),
         'USER' : getenv('DB_USER'),
         'PASSWORD' : getenv('DB_PASSWORD'),
@@ -162,4 +162,6 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:5173']
+CORS_ALLOWED_ORIGINS = [
+    getenv('FRONTEND_URL')
+]
