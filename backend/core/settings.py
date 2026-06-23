@@ -24,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-aeu**!dm!s765s^jhuk&(^*t^e7eqi1z_jvs_$wclq-ez-)(%y'
+SECRET_KEY = getenv('SECRET_KEY', 'django-insecure-aeu**!dm!s765s^jhuk&(^*t^e7eqi1z_jvs_$wclq-ez-)(%y')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if getenv('DEBUG') == 'True' else False
+DEBUG = getenv('DEBUG', 'False').lower() in {'1', 'true', 'yes'}
 
-ALLOWED_HOSTS = getenv('ALLOWED_HOSTS').split(',') if getenv('ALLOWED_HOSTS') else []
+ALLOWED_HOSTS = [host.strip() for host in getenv('ALLOWED_HOSTS', '').split(',') if host.strip()]
 
 
 # Application definition
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 
     # cors header middleware
@@ -138,6 +139,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -163,5 +165,7 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    getenv('FRONTEND_URL')
+    origin.strip()
+    for origin in getenv('FRONTEND_URL', '').split(',')
+    if origin.strip()
 ]
