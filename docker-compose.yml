@@ -39,9 +39,9 @@ services:
     build:
       context: .
       dockerfile: frontend/Dockerfile
-      args:
-        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
     restart: unless-stopped
+    environment:
+      API_URL: ${API_URL:-http://localhost:8000}
     depends_on:
       - backend
     ports:

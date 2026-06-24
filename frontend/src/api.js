@@ -1,8 +1,10 @@
 import axios from "axios";
 import {ACCESS_TOKEN} from "./constants";
 
+const runtimeConfig = globalThis.__APP_CONFIG__ ?? {};
+
 const api = axios.create({
-    baseURL : import.meta.env.VITE_API_URL,
+    baseURL : runtimeConfig.API_URL,
 })
 
 api.interceptors.request.use(
